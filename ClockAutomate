@@ -1,0 +1,35 @@
+#Clock Automation
+
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+#Connecting device to UIAutomator
+d = ui2.connect('E6545LV230225000054')
+d.press('home')
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+#Clock app open
+d(resourceId="com.android.launcher3:id/icon", text="Clock").click()
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+print("clock open succesfully")
+time.sleep(2)
+d(resourceId="com.google.android.deskclock:id/fab").click()
+time.sleep(2)
+#Set clock time
+print("we have to change time manually once")
+d(text="1").click()
+time.sleep(2)
+d(text="05").click()
+time.sleep(2)
+#close clock app
+d(resourceId="com.android.systemui:id/center_group").click()
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
