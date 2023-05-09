@@ -1,0 +1,18 @@
+#Standby
+
+import uiautomator2 as ui2
+import time
+d = ui2.connect('E6545LV230225000054')
+import subprocess
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
