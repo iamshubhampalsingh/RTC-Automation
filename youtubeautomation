@@ -1,0 +1,29 @@
+import uiautomator2 as ui2
+import time
+d = ui2.connect('E6545LV230225000054')
+time.sleep(2)
+num_runs = 3
+for run in range(num_runs):
+    
+ d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/icon", text="YouTube").click()
+time.sleep(2)
+d(resourceId="com.google.android.youtube:id/menu_item_1").click()
+time.sleep(2)
+d(text="Search YouTube").set_text("LAVA V5 - First impressions")
+time.sleep(2)
+d.press("enter")
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(0)
+d.sleep(2)
+d(resourceId="com.google.android.youtube:id/watch_player").click()
+d(resourceId="com.google.android.youtube:id/fullscreen_button").click()
+time.sleep(170)
+d.press("home")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+ time.sleep(2)
