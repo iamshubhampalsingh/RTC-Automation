@@ -1,0 +1,16 @@
+#Login to facebook
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/icon", text="Facebook").click()
+time.sleep(2)
+d(text="Log into another account").click()
+time.sleep(2)
+d(resourceId="com.google.android.gms:id/cancel").click()
+time.sleep(2)
+d(text="Mobile number or email").set_text("Lavamobiletesting07@gmail.com")
+time.sleep(2)
+d(text="Password").set_text("lavaa154d")
+time.sleep(2)
+d(text="Log in").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/icon", text="YouTube").click
+time.sleep(2)
