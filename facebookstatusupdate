@@ -1,0 +1,14 @@
+import uiautomator2 as ui2
+import time
+import subprocess
+d = ui2.connect('E6545LV230225000054')
+d.press('home')
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+d(resourceId="com.android.launcher3:id/icon", text="Facebook").click()
+d(description="Make a post on Facebook").click()
+# Input the desired text into the status update
+d.xpath('//android.widget.ScrollView/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').set_text("Lava mobile - Rethink what a phone can do")
+# Post the status update
+d(description="POST").click()
