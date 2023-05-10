@@ -1,0 +1,33 @@
+import uiautomator2 as ui2
+import time
+import subprocess
+d = ui2.connect('E6545LV230225000054')
+d.press('home')
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+d(text="WhatsApp").click()
+time.sleep(2)
+d(resourceId="com.whatsapp:id/fabText").click()
+time.sleep(2)
+d(resourceId="com.whatsapp:id/contactpicker_row_name", text="+91 84486 97488 (You)").click()
+time.sleep(2)
+num_run = 3
+for i in range(num_run):
+ time.sleep(10)
+    
+ # Enter text in the chat input field
+ chat_input = d(resourceId="com.whatsapp:id/entry")
+ chat_input.set_text("hello")
+
+ # Tap on the send button
+ send_button = d(resourceId="com.whatsapp:id/send")
+ send_button.click()
+     
+ # Check for the delivery status by inspecting the UI elements
+ delivered = d(resourceId="	com.whatsapp:id/status", className="android.widget.ImageView")
+ if delivered.exists():
+    print("Message delivered successfully.")
+ else:
+    print("Message delivery failed.")
