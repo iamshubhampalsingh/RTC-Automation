@@ -1,0 +1,19 @@
+import uiautomator2 as ui2
+import time
+import subprocess
+
+d = ui2.connect('E6545LV230225000054')
+d.press('home')
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+d(text="Subway Surf").click()
+time.sleep(10)
+x = 500  # X coordinate of the click point
+y = 300  # Y coordinate of the click point
+d.click(x, y)
+time.sleep(600)
+d.press("home")
+d(ResourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(ResourceId=com.android.launcher3:id/clear_all_button).click()
