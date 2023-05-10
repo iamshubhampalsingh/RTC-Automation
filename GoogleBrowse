@@ -1,0 +1,42 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6545LV230225000054')
+d(text="Gmail").click()
+
+# Wait for the app to load
+time.sleep(2)
+
+# Tap on the "Sign in" button
+d(resourceId="com.google.android.gm:id/welcome_tour_skip").click()
+time.sleep(2)
+d(resourceId="com.google.android.gm:id/setup_addresses_add_another").click()
+time.sleep(2)
+d(resourceId="com.google.android.gm:id/account_setup_item").click()
+# Enter the email/username
+d(resourceId="identifierId").set_text("lavamobiletesting07@gmail.com")
+time.sleep(2)
+d(text="Next").click()
+time.sleep(4)
+# Enter the password
+d.send_keys("lavaa156")
+d(text="Next").click()
+time.sleep(4)
+d(text="I agree").click()
+time.sleep(2)
+d(text="More").click()
+time.sleep(2)
+d(text="Accept").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(text="Chrome").click()
+num_runs = 50
+for run in range(num_runs):
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(steps=10)
+ time.sleep(2)
+ d(scrollable=True).scroll.toBeginning(steps=10)
+    
+print("The google news scroll for 10 minutes")
