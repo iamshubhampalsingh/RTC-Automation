@@ -1,0 +1,24 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6545LV230225000054')
+d(text="TempleRun2").click()
+time.sleep(20)
+# Define the coordinates where you want to click
+x = 0.5
+y = 0.931
+
+# Perform the click action
+d.click(x, y)
+time.sleep(10)
+num_runs = 10
+for run in range(num_runs):
+ time.sleep(60)
+
+# Check if any game-related UI element is present
+ game_element = d(className="android.widget.FrameLayout", packageName="com.imangi.templerun2")
+ if game_element.exists():
+     print("A game is playing.")
+ else:
+     print("No game is playing.")              
