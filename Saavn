@@ -1,0 +1,30 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6546LV23011000150')
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="JioSaavn").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131365512").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131364894").click()
+time.sleep(15)
+num_run = 30
+for run in range(num_run):
+    d(resourceId="com.jio.media.jiobeats:id/2131364521").click()
+    time.sleep(20)
+
+# Example: Check if the play/pause button is visible
+    play_pause_button = d(resourceId="com.jio.media.jiobeats:id/2131364810")
+    if play_pause_button.exists():
+     is_playing = True
+
+# Display the result
+    if is_playing:
+     print("Music is currently playing on Saavn.")
+    else:
+     print("No music is playing on Saavn.")
