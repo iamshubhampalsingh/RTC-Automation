@@ -1,0 +1,21 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6546LV23011000150')
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Maps").click()
+time.sleep(2)
+num_run = 60
+for run in range(num_run):
+ d.xpath('//*[@resource-id="com.google.android.apps.maps:id/mylocation_button"]/android.widget.FrameLayout[1]').click()
+ time.sleep(10)
+    
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()
