@@ -1,0 +1,24 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6546LV23011000150')
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Photos").click()
+time.sleep(2)
+d(description="Photo taken on 19-Apr-2023 5:25:20 pm").click()
+time.sleep(10)
+num_run = 60
+for run in range(num_run):
+# Perform the left swipe
+ d.shell(["input", "swipe", "500", "500", "100", "500"])
+ time.sleep(10)
+
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL")
