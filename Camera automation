@@ -1,0 +1,35 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6545LV230225000054')
+d(text="Camera").click()
+time.sleep(2)
+d(resourceId="com.android.camera2:id/btn_camera_switch").click()
+
+time.sleep(1)
+num_runs = 5
+for run in range(num_runs):
+    d(resourceId="com.android.camera2:id/shutter_button").click()
+    time.sleep(40)
+d(resourceId="com.android.camera2:id/rounded_thumbnail_view").click()
+time.sleep(2)
+# Check if the photo preview is visible
+is_saved = d(resourceId="com.google.android.apps.photos:id/video_player_controller_fragment_container").exists()
+
+# Print the result
+if is_saved:
+    print("Photo is saved in the preview.")
+else:
+    print("Photo is not saved in the preview.")
+    
+num_runs = 5
+for run in range(num_runs):
+ time.sleep(10)
+ d.swipe_ext("left")
+    
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
