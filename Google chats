@@ -1,0 +1,39 @@
+import uiautomator2 as ui2
+from uiautomator2 import Device
+d = Device()
+import time
+d = ui2.connect('E6545LV230225000054')
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Moj-Lite").click()
+time.sleep(10)
+num_runs = 60
+for run in range(num_runs):
+ before_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+ after_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+
+ # Determine the starting and ending coordinates for the swipe action
+ start_x = after_swipe_element.center()[0]
+ start_y = after_swipe_element.center()[1]
+ end_x = start_x
+ end_y = start_y - 500  # Adjust the value based on the desired swipe distance
+
+ # Perform the swipe action
+ d.swipe(start_x, start_y, end_x, end_y)
+ swipe_done = before_swipe_element != after_swipe_element
+
+ # Print the result
+ if swipe_done:
+    print("Swipe action is done!")
+ else:
+    print("Swipe action failed or no change in element detected.")
+ time.sleep(10)
+
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
