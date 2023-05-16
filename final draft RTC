@@ -1,0 +1,160 @@
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+#Connecting device to UIAutomator
+d = ui2.connect('192.168.2.22:5555')# Run the adb command to get the battery percentage
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of alarm:", battery_percentage)
+
+###################Code to run the clock and stop alarm after 5 seconds ###########################
+d.press('home')
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+#Clock app open
+d(resourceId="com.android.launcher3:id/icon", text="Clock").click()
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+# Calculate the alarm time
+current_time = datetime.now()
+alarm_time = current_time + timedelta(minutes=5)
+print("alarm time =", alarm_time)
+# Convert the alarm time to the desired format
+hour = alarm_time.hour
+minute = alarm_time.minute
+time.sleep(2)
+d(resourceId="com.android.systemui:id/center_group").click()
+num_runs = 360
+for run in range(num_runs):
+    time.sleep(1)
+    if(d(text = "alarm"))is True:
+        d.click("stop")
+print("Alarm stopped")       
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+d.press('home')
+print("Battery Percentage at end of alarm:", battery_percentage)
+###########################code to run standby  ########################################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of standby:", battery_percentage)
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
+
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d.press('home')
+print("Battery Percentage at the end of standby:", battery_percentage)
+###############Youtube run for 10 minutes#########################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of youtube:", battery_percentage)
+time.sleep(2)
+num_runs = 3
+for run in range(num_runs):
+    
+ d(scrollable=True).scroll.toEnd(20)
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(10)
+ time.sleep(2)
+ d(resourceId="com.android.launcher3:id/icon", text="YouTube").click()
+ time.sleep(2)
+ d(resourceId="com.google.android.youtube:id/menu_item_1").click()
+ time.sleep(2)
+ d(text="Search YouTube").set_text("LAVA V5 - First impressions")
+ time.sleep(2)
+ d.press("enter")
+ time.sleep(5)
+ d(scrollable=True).scroll.toEnd(0)
+ time.sleep(5)
+ d.click(500,300)
+ time.sleep(5)
+ d.click(500,300)
+ d(resourceId="com.google.android.youtube:id/fullscreen_button").click()
+ time.sleep(170)
+ d.press("home")
+ d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of youtube:", battery_percentage)
+############################################google call#####################################################################
+
+d(text="Phone").click()
+time.sleep(2)
+num_runs = 40
+for run in range(num_runs):
+ d(resourceId='com.android.dialer:id/fab').click()
+ d(text='8').click()
+ d(text='5').click()
+ d(text='2').click()
+ d(text='7').click()
+ d(text='7').click()
+ d(text='4').click()
+ d(text='6').click()
+ d(text='8').click()
+ d(text='9').click()
+ d(text='7').click()
+ d(resourceId="com.android.dialer:id/dialpad_floating_action_button").click()
+ time.sleep(15)
+ d(resourceId="com.android.dialer:id/incall_end_call").click()
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+d.press("home")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of calling:", battery_percentage)
