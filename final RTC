@@ -1,0 +1,917 @@
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+#Connecting device to UIAutomator
+d = ui2.connect('192.168.2.22:5555')# Run the adb command to get the battery percentage
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of alarm:", battery_percentage)
+
+###################Code to run the clock and stop alarm after 5 seconds ###########################
+d.press('home')
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+#Clock app open
+d(resourceId="com.android.launcher3:id/icon", text="Clock").click()
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+# Calculate the alarm time
+current_time = datetime.now()
+alarm_time = current_time + timedelta(minutes=5)
+print("alarm time =", alarm_time)
+# Convert the alarm time to the desired format
+hour = alarm_time.hour
+minute = alarm_time.minute
+time.sleep(2)
+d(resourceId="com.android.systemui:id/center_group").click()
+num_runs = 360
+for run in range(num_runs):
+    time.sleep(1)
+    if(d(text = "alarm"))is True:
+        d.click("stop")
+print("Alarm stopped")       
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+d.press('home')
+print("Battery Percentage at end of alarm:", battery_percentage)
+###########################code to run standby  ########################################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of standby:", battery_percentage)
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
+
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+print("Battery Percentage at the end of standby:", battery_percentage)
+###############Youtube run for 10 minutes#########################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of youtube:", battery_percentage)
+time.sleep(2)
+num_runs = 2
+for run in range(num_runs):
+    
+ d(scrollable=True).scroll.toEnd(20)
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(10)
+ time.sleep(2)
+ d(resourceId="com.android.launcher3:id/icon", text="YouTube").click()
+ time.sleep(2)
+ d(resourceId="com.google.android.youtube:id/menu_item_1").click()
+ time.sleep(2)
+ d(text="Search YouTube").set_text("LAVA V5 - First impressions")
+ time.sleep(2)
+ d.press("enter")
+ time.sleep(5)
+ d(scrollable=True).scroll.toEnd(0)
+ time.sleep(10)
+ d.click(500,300)
+ time.sleep(10)
+ d(resourceId="com.google.android.youtube:id/watch_player").click()
+ time.sleep(1)
+ d(resourceId="com.google.android.youtube:id/fullscreen_button").click()
+ time.sleep(180)
+ d.press("home")
+ d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of youtube:", battery_percentage)
+############################################google call#####################################################################
+
+d(text="Phone").click()
+time.sleep(2)
+num_runs = 40
+for run in range(num_runs):
+ d(resourceId='com.android.dialer:id/fab').click()
+ d(text='8').click()
+ d(text='5').click()
+ d(text='2').click()
+ d(text='7').click()
+ d(text='7').click()
+ d(text='4').click()
+ d(text='6').click()
+ d(text='8').click()
+ d(text='9').click()
+ d(text='7').click()
+ d(resourceId="com.android.dialer:id/dialpad_floating_action_button").click()
+ time.sleep(15)
+ d(resourceId="com.android.dialer:id/incall_end_call").click()
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+d.press("home")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of calling:", battery_percentage)
+############################################messages################################################################
+d(text="Messages").click()
+time.sleep(2)
+d(resourceId="com.google.android.apps.messaging:id/start_chat_fab").click()
+time.sleep(2)
+d(text="Abc").click()
+time.sleep(2)
+num_runs = 10
+for run in range(num_runs):
+ d(resourceId="com.google.android.apps.messaging:id/compose_message_text").set_text("hello")
+ time.sleep(2)
+ d(resourceId="com.google.android.apps.messaging:id/send_message_button_container").click()
+ time.sleep(60)
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of messaging:", battery_percentage)
+
+###############################################google browser##############################################################
+d(text="Chrome").click()
+num_runs = 60
+for run in range(num_runs):
+ time.sleep(5)
+ d(scrollable=True).scroll.toEnd(steps=10)
+ time.sleep(5)
+ d(scrollable=True).scroll.toBeginning(steps=10)
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')    
+print("The google news scroll for 10 minutes")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of google browse:", battery_percentage)
+
+###############################################Standby###############################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of standby:", battery_percentage)
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
+
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+print("Battery Percentage at the end of standby:", battery_percentage)
+
+##############################################Game(temple run)#############################################################################
+d(scrollable=True).scroll.toEnd(steps=10)
+time.sleep(5)
+d(scrollable=True).scroll.toEnd(steps=10)
+d(text="TempleRun2").click()
+time.sleep(40)
+print("click on screen")
+# Define the coordinates where you want to click
+x=0.517
+y=0.929
+d.click(x,y)
+print("clicked on screen")
+num_runs = 10
+for run in range(num_runs):
+ time.sleep(60)
+
+# Check if any game-related UI element is present
+ game_element = d(className="android.widget.FrameLayout", packageName="com.imangi.templerun2")
+ if game_element.exists():
+     print("A game is playing.")
+ else:
+     print("No game is playing.")
+d.press("home")
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of temple run:", battery_percentage)
+
+#########################################whatsapp#######################################################################
+d.press('home')
+time.sleep(2)
+num_run = 60
+for i in range(num_run):
+ time.sleep(10)
+ d(scrollable=True).scroll.toEnd()
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd()
+ d(text="WhatsApp").click()
+ time.sleep(2)
+ d(resourceId="com.whatsapp:id/fab").click()
+ time.sleep(2)
+ d(resourceId="com.whatsapp:id/contactpicker_row_name", text="+91 84486 97488 (You)").click()
+ time.sleep(2)   
+ # Enter text in the chat input field
+ chat_input = d(resourceId="com.whatsapp:id/entry")
+ chat_input.set_text("hello")
+
+ # Tap on the send button
+ send_button = d(resourceId="com.whatsapp:id/send")
+ send_button.click()
+ d.press("home")
+ d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+ d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the end of temple run:", battery_percentage)
+
+############################################facebook#####################################################################
+d.press('home')
+time.sleep(2)
+num_runs = 10
+for run in range(num_runs):
+ time.sleep(60)
+ d(scrollable=True).scroll.toEnd()
+ d(resourceId="com.android.launcher3:id/icon", text="Facebook").click()
+ d(description="Make a post on Facebook").click()
+# Input the desired text into the status update
+ d.xpath('//android.widget.ScrollView/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').set_text("Lava mobile - Rethink what a phone can do")
+# Post the status update
+ d(description="POST").click()
+ d.press("home")
+ d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+ d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of facebook:", battery_percentage)
+
+#################################################game(subwaysurfer)##########################################################
+d.press('home')
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd()
+d(text="Subway Surf").click()
+time.sleep(30)
+x=0.517
+y=0.929
+d.click(x,y)
+print("tap to play clicked")
+time.sleep(570)
+d.press("home")
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+
+##############################################Youtube################################################################
+
+time.sleep(2)
+num_runs = 3
+for run in range(num_runs):
+    
+ d(scrollable=True).scroll.toEnd(20)
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(10)
+ time.sleep(2)
+ d(resourceId="com.android.launcher3:id/icon", text="YouTube").click()
+ time.sleep(2)
+ d(resourceId="com.google.android.youtube:id/menu_item_1").click()
+ time.sleep(2)
+ d(text="Search YouTube").set_text("LAVA V5 - First impressions")
+ time.sleep(2)
+ d.press("enter")
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(0)
+ d.sleep(2)
+ d(resourceId="com.google.android.youtube:id/watch_player").click()
+ d(resourceId="com.google.android.youtube:id/fullscreen_button").click()
+ time.sleep(170)
+ d.press("home")
+ d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+###############################################Standby###############################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of standby:", battery_percentage)
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
+
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+
+################################################video player###############################################################
+d = ui2.connect('192.168.2.22:5555')
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(text="Files").click()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Internal storage").click()
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="video.mp4.mp4").click()
+time.sleep(300)
+d.press("home")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+ time.sleep(2)
+ d(text="CLEAR ALL").click()  
+ time.sleep(2)
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+###############################################Saavn#######################################################################
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="JioSaavn").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131365512").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131364894").click()
+time.sleep(15)
+num_run = 30
+for run in range(num_run):
+    d(resourceId="com.jio.media.jiobeats:id/2131364521").click()
+    time.sleep(20)
+
+# Example: Check if the play/pause button is visible
+    play_pause_button = d(resourceId="com.jio.media.jiobeats:id/2131364810")
+    if play_pause_button.exists():
+     is_playing = True
+
+# Display the result
+    if is_playing:
+     print("Music is currently playing on Saavn.")
+    else:
+     print("No music is playing on Saavn.")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)    
+    
+########################################Gallery########################################################################
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Photos").click()
+time.sleep(2)
+d(description="Photo taken on 19-Apr-2023 5:25:20 pm").click()
+time.sleep(10)
+num_run = 60
+for run in range(num_run):
+# Perform the left swipe
+ d.shell(["input", "swipe", "500", "500", "100", "500"])
+ time.sleep(10)
+
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+#########################################Maps##############################################################################
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Maps").click()
+time.sleep(2)
+num_run = 60
+for run in range(num_run):
+ d.xpath('//*[@resource-id="com.google.android.apps.maps:id/mylocation_button"]/android.widget.FrameLayout[1]').click()
+ time.sleep(10)
+    
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+###########################################Mojlite+########################################################################3
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Moj-Lite").click()
+time.sleep(10)
+num_runs = 60
+for run in range(num_runs):
+ before_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+ after_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+
+ # Determine the starting and ending coordinates for the swipe action
+ start_x = after_swipe_element.center()[0]
+ start_y = after_swipe_element.center()[1]
+ end_x = start_x
+ end_y = start_y - 500  # Adjust the value based on the desired swipe distance
+
+ # Perform the swipe action
+ d.swipe(start_x, start_y, end_x, end_y)
+ swipe_done = before_swipe_element != after_swipe_element
+
+ # Print the result
+ if swipe_done:
+    print("Swipe action is done!")
+ else:
+    print("Swipe action failed or no change in element detected.")
+ time.sleep(10)
+
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+#####################################3Standby###########################################################################
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+print("Battery Percentage at the start of standby:", battery_percentage)
+turn_off_command = "adb shell input keyevent 26"
+turn_on_command = "adb shell input keyevent 224"
+# Define the duration to keep the screen off in seconds
+duration = 600
+# Turn off the screen
+subprocess.run(turn_off_command, shell=True, check=True)
+# Wait for the specified duration
+time.sleep(duration)
+# Turn on the screen
+subprocess.run(turn_on_command, shell=True, check=True)
+d(scrollable=True).scroll.toEnd(10)
+#time.sleep(2)
+
+print("Standby with 10 messages done")
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()  
+time.sleep(2)
+d.press('home')
+print("Battery Percentage at the end of standby:", battery_percentage)
+
+#################################################Camera#####################################################################
+d(text="Camera").click()
+time.sleep(2)
+d(resourceId="com.android.camera2:id/btn_camera_switch").click()
+
+time.sleep(1)
+num_runs = 5
+for run in range(num_runs):
+    d(resourceId="com.android.camera2:id/shutter_button").click()
+    time.sleep(40)
+d(resourceId="com.android.camera2:id/rounded_thumbnail_view").click()
+time.sleep(2)
+# Check if the photo preview is visible
+is_saved = d(resourceId="com.google.android.apps.photos:id/video_player_controller_fragment_container").exists()
+
+# Print the result
+if is_saved:
+    print("Photo is saved in the preview.")
+else:
+    print("Photo is not saved in the preview.")
+    
+num_runs = 5
+for run in range(num_runs):
+ time.sleep(10)
+ d.swipe_ext("left")
+    
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+##########################################Google chat########################################################################
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="Moj-Lite").click()
+time.sleep(10)
+num_runs = 60
+for run in range(num_runs):
+ before_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+ after_swipe_element = d(resourceId="in.mohalla.video.lite:id/iv_profile_pic")
+
+ # Determine the starting and ending coordinates for the swipe action
+ start_x = after_swipe_element.center()[0]
+ start_y = after_swipe_element.center()[1]
+ end_x = start_x
+ end_y = start_y - 500  # Adjust the value based on the desired swipe distance
+
+ # Perform the swipe action
+ d.swipe(start_x, start_y, end_x, end_y)
+ swipe_done = before_swipe_element != after_swipe_element
+
+ # Print the result
+ if swipe_done:
+    print("Swipe action is done!")
+ else:
+    print("Swipe action failed or no change in element detected.")
+ time.sleep(10)
+
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+###############################################Music######################################################################
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d(text="JioSaavn").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131365512").click()
+time.sleep(2)
+d(resourceId="com.jio.media.jiobeats:id/2131364894").click()
+time.sleep(15)
+num_run = 30
+for run in range(num_run):
+    d(resourceId="com.jio.media.jiobeats:id/2131364521").click()
+    time.sleep(20)
+
+# Example: Check if the play/pause button is visible
+    play_pause_button = d(resourceId="com.jio.media.jiobeats:id/2131364810")
+    if play_pause_button.exists():
+     is_playing = True
+
+# Display the result
+    if is_playing:
+     print("Music is currently playing on Saavn.")
+    else:
+     print("No music is playing on Saavn.")
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)   
+###########################################3Twitter#####################################################################
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(20)
+time.sleep(2)
+d(scrollable=True).scroll.toEnd(10)
+d(text="Twitter").click()
+time.sleep(2)
+num_runs = 5
+for run in range(num_runs):
+ time.sleep(60)
+ d(resourceId="com.twitter.android:id/composer_write").click()
+ time.sleep(2)
+ d(resourceId="com.twitter.android:id/composer_write").click()
+ time.sleep(2)
+ d(resourceId="com.twitter.android:id/tweet_text").click()
+ time.sleep(2)
+ input_field = d(resourceId="com.google.android.apps.dynamite:id/compose_scroll_view_only_child")
+ time.sleep(2)
+ # Enter the chat message (replace "your_message" with the actual message you want to send)
+ message = "HelloThisisshubhampalsinghworkingforlavainternationalasseniorautomationtestengineerwearewritingsamescriptsusedfordifferentbrandmobilephonesalsoofdifferentandriodversionHerewecanrunsamescriptonmultipledevicessimultaneouslyfromonesystemDUTandreference"
+ subprocess.run(["adb", "shell", "input", "text", message])
+ time.sleep(2)
+ d.xpath('//*[@resource-id="com.twitter.android:id/composer_toolbar"]/android.widget.LinearLayout[1]').click()
+
+time.sleep(2)
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/clear_all_button").click()
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+#######################################33###Facebook##########################################################################
+d.press('home')
+d(scrollable=True).scroll.toEnd()
+time.sleep(2)
+d(resourceId="com.android.launcher3:id/icon", text="Facebook").click()
+d(description="Make a post on Facebook").click()
+# Input the desired text into the status update
+d.xpath('//android.widget.ScrollView/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').set_text("Lava mobile - Rethink what a phone can do")
+# Post the status update
+d(description="POST").click()
+time.sleep(2)
+num_runs = 20
+for run in range(num_runs):
+ time.sleep(30)
+ # Get the dimensions of the device screen
+ screen_width, screen_height = d.window_size()
+
+ # Get the dimensions of the device screen
+ screen_width, screen_height = d.window_size()
+
+ # Define the start and end coordinates for the swipe down gesture
+ start_x = screen_width // 2
+ start_y = screen_height // 4
+ end_x = start_x
+ end_y = start_y * 3
+
+ # Perform the swipe down gesture
+ d.swipe(start_x, start_y, end_x, end_y, duration=0.5)
+    
+d(resourceId="com.android.systemui:id/center_group").click()
+time.sleep(2)
+d(resourceId="com.android.systemui:id/recent_apps").click()
+time.sleep(2)
+d(text="CLEAR ALL").click()
+
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
+#####################################################Browser##################################################################
+d(text="Gmail").click()
+
+# Wait for the app to load
+time.sleep(2)
+d(text="Chrome").click()
+num_runs = 50
+for run in range(num_runs):
+ time.sleep(2)
+ d(scrollable=True).scroll.toEnd(steps=10)
+ time.sleep(2)
+ d(scrollable=True).scroll.toBeginning(steps=10)
+    
+print("The google news scroll for 10 minutes")
+
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of subwaysurfer:", battery_percentage)
