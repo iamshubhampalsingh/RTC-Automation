@@ -69,7 +69,8 @@ subprocess.run(turn_off_command, shell=True, check=True)
 time.sleep(duration)
 # Turn on the screen
 subprocess.run(turn_on_command, shell=True, check=True)
-d(scrollable=True).scroll.toEnd(10)
+time.sleep(2)
+d.swipe(500, 1500, 500, 500)  # Adjust the swipe coordinates as needed
 #time.sleep(2)
 
 print("Standby with 10 messages done")
