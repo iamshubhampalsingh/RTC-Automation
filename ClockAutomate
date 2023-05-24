@@ -3,33 +3,92 @@
 import uiautomator2 as ui2
 import time
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
+import pandas as pd
+import os
+
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 print("Current Time =", current_time)
-#Connecting device to UIAutomator
-d = ui2.connect('E6545LV230225000054')
-d.press('home')
-time.sleep(2)
+
+# Connecting device to UIAutomator
+d = ui2.connect('192.168.100.239:5555')
+
+# Run the adb command to get the battery percentage
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+# Print the battery percentage
+print("Battery Percentage at start of alarm:", battery_percentage)
+
+
+# Get the current time
+current_time = datetime.now()
+
+# Calculate the alarm time (5 minutes from the current time)
+alarm_time = current_time + timedelta(minutes=5)
+print(alarm_time)
+# Extract the hour and minute from the alarm time
+hour = str(alarm_time.hour)
+minute = str(alarm_time.minute)
+
+# Open the Clock app
+d.press("home")
 d(scrollable=True).scroll.toEnd()
 time.sleep(2)
-#Clock app open
 d(resourceId="com.android.launcher3:id/icon", text="Clock").click()
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("Current Time =", current_time)
-print("clock open succesfully")
-time.sleep(2)
+# Set the alarm time
 d(resourceId="com.google.android.deskclock:id/fab").click()
 time.sleep(2)
-#Set clock time
-print("we have to change time manually once")
-d(text="1").click()
+
+# Locate the text box for entering the hour value and click on it
+d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_hour_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').click()
+text_box1 = d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_hour_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]')
+if text_box.exists:
+    d.click(0.406, 0.923)
+    d.send_keys(hour)
+    
+
+d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_minute_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').click()
+text_box2 = d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_minute_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]')
+if text_box.exists:
+    d.click(0.406, 0.923)
+    d.send_keys(minute)
 time.sleep(2)
-d(text="05").click()
+d(text="OK").click()
 time.sleep(2)
-#close clock app
 d(resourceId="com.android.systemui:id/center_group").click()
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("Current Time =", current_time)
+time.sleep(300)
+num_runs = 5  # Stop the alarm after 5 seconds (adjust as needed)
+for run in range(num_runs):
+    time.sleep(1)
+    if d(text="alarm").exists():
+        d(text="Stop").click()
+
+print("Alarm stopped")
+
+# Get the battery percentage at the end
+result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
+battery_info = result.stdout.splitlines()
+battery_percentage_end = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage_end = line.split(':')[1].strip()
+
+# Print the battery percentage at the end
+print("Battery Percentage at end of alarm:", battery_percentage_end)
+
+# Create a DataFrame to store the results
+results_df = pd.DataFrame(columns=['Start Time', 'Battery Percentage at Start', 'End Time', 'Battery Percentage at End'])
+results_df.loc[0] = [current_time, battery_percentage, current_time, battery_percentage_end]
+
+# Save the results to an Excel file
+results_df.to_excel('alarm_results.xlsx', index=False)
+cwd = os.getcwd()
+print("Current working directory:", cwd)
