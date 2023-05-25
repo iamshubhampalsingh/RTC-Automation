@@ -1,18 +1,52 @@
-#Standby
-
 import uiautomator2 as ui2
 import time
-d = ui2.connect('E6545LV230225000054')
 import subprocess
-turn_off_command = "adb shell input keyevent 26"
-turn_on_command = "adb shell input keyevent 224"
-# Define the duration to keep the screen off in seconds
-duration = 600
-# Turn off the screen
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.198.239:5555"
+
+# ADB command to retrieve battery information
+adb_command = ['adb', '-s', receiver_device_serial, 'shell', 'dumpsys', 'battery']
+
+# Execute the ADB command and capture the output
+result = subprocess.run(adb_command, capture_output=True, text=True)
+
+# Parse the output to extract the battery percentage
+battery_info = result.stdout.splitlines()
+battery_percentage = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage = line.split(':')[1].strip()
+
+print("Battery Percentage of the receiver device:", battery_percentage)
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device('192.168.198.239:5555')
+
+turn_off_command = f"adb -s {receiver_device_serial} shell input keyevent 26"
+turn_on_command = f"adb -s {receiver_device_serial} shell input keyevent 224"
+time.sleep(2)
 subprocess.run(turn_off_command, shell=True, check=True)
-# Wait for the specified duration
-time.sleep(duration)
-# Turn on the screen
+
+# Compose the message
+sender_device(text="Messages").click()
+time.sleep(2)
+sender_device(text="Start chat").click()
+time.sleep(2)
+sender_device(text="AAAAA").click()
+sender_device(text="Mobile+91 84486 97488").click()
+
+num_runs = 10
+for run in range(num_runs):
+    sender_device(resourceId="com.google.android.apps.messaging:id/compose_message_text").set_text("hello")
+    time.sleep(2)
+    sender_device(resourceId="com.google.android.apps.messaging:id/send_message_button_container").click()
+    time.sleep(60)
+
 subprocess.run(turn_on_command, shell=True, check=True)
-d(scrollable=True).scroll.toEnd(10)
-#time.sleep(2)
+time.sleep(2)
+receiver_device.swipe(500, 1500, 500, 500)  # Adjust the swipe coordinates as needed
+
