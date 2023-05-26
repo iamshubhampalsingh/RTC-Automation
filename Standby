@@ -1,9 +1,14 @@
 import uiautomator2 as ui2
 import time
 import subprocess
-
+import pandas as pd
+import os
+from datetime import datetime, timedelta
 # Device serial number of the receiver device
-receiver_device_serial = "192.168.198.239:5555"
+receiver_device_serial = "192.168.76.239:5555"
+
+# Get the current time
+start_time = datetime.now()
 
 # ADB command to retrieve battery information
 adb_command = ['adb', '-s', receiver_device_serial, 'shell', 'dumpsys', 'battery']
@@ -20,11 +25,17 @@ for line in battery_info:
 
 print("Battery Percentage of the receiver device:", battery_percentage)
 
+# Get the current time
+current_time = datetime.now()
+
 # Create a Device object for the sender device
 sender_device = ui2.Device('cf611ff9')
 
+# Get the current app package and activity
+app_current = d.current_app()
+
 # Create a Device object for the receiver device
-receiver_device = ui2.Device('192.168.198.239:5555')
+receiver_device = ui2.Device(receiver_device_serial)
 
 turn_off_command = f"adb -s {receiver_device_serial} shell input keyevent 26"
 turn_on_command = f"adb -s {receiver_device_serial} shell input keyevent 224"
@@ -49,4 +60,50 @@ for run in range(num_runs):
 subprocess.run(turn_on_command, shell=True, check=True)
 time.sleep(2)
 receiver_device.swipe(500, 1500, 500, 500)  # Adjust the swipe coordinates as needed
+
+# Get the battery percentage at the end
+result = subprocess.run(['adb', '-s', receiver_device_serial, 'shell', 'dumpsys', 'battery'],
+                        capture_output=True, text=True)
+battery_info = result.stdout.splitlines()
+battery_percentage_end = None
+for line in battery_info:
+    if 'level' in line:
+        battery_percentage_end = line.split(':')[1].strip()
+
+# Print the battery percentage at the end
+print("Battery Percentage at end of standby:", battery_percentage_end)
+
+# Stop the logcat process and capture the logs
+logcat_process = subprocess.Popen(['adb', '-s', receiver_device_serial, 'logcat'], stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, text=True)
+
+# Sleep for a few seconds to capture logs
+time.sleep(5)
+
+# Get the current time after the test
+end_time = datetime.now()
+
+# Stop the logcat process and capture the logs
+logcat_process.terminate()
+
+# Capture the log output and errors
+log_output, log_errors = logcat_process.communicate()
+
+# Read the existing Excel file
+existing_df = pd.read_excel(r'C:\Users\51010243\alarm_results.xlsx')
+
+# Create a DataFrame to store the results and logs
+results_df = pd.DataFrame(columns=['Current App', 'Start Time', 'Battery Percentage at Start', 'End Time', 'Battery Percentage at End', 'Logs'])
+results_df.loc[3] = [current_app, current_time, battery_percentage, current_time, battery_percentage_end, log_output]
+
+# Concatenate the existing DataFrame and the new DataFrame
+combined_df = pd.concat([existing_df, results_df], axis=0)
+
+# Save the updated DataFrame to the same Excel file
+combined_df.to_excel('alarm_results.xlsx', index=False)
+
+
+cwd = os.getcwd()
+print("Current working directory:", cwd)
+
 
