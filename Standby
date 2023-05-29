@@ -32,7 +32,7 @@ current_time = datetime.now()
 sender_device = ui2.Device('cf611ff9')
 
 # Get the current app package and activity
-app_current = d.current_app()
+current_app = d.current_app()
 
 # Create a Device object for the receiver device
 receiver_device = ui2.Device(receiver_device_serial)
