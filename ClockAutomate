@@ -69,8 +69,8 @@ time.sleep(300)
 num_runs = 5  # Stop the alarm after 5 seconds (adjust as needed)
 for run in range(num_runs):
     time.sleep(1)
-    if d(text="alarm").exists():
-        d(text="Stop").click()
+    if d(text="Alarm").exists():
+        d(text="STOP").click()
 
 print("Alarm stopped")
 
