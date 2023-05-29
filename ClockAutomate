@@ -12,7 +12,7 @@ current_time = now.strftime("%H:%M:%S")
 print("Current Time =", current_time)
 
 # Connecting device to UIAutomator
-d = ui2.connect('192.168.100.239:5555')
+d = ui2.connect('192.168.7.54:5555')
 
 # Run the adb command to get the battery percentage
 result = subprocess.run(['adb', 'shell', 'dumpsys', 'battery'], capture_output=True, text=True)
@@ -34,6 +34,7 @@ current_time = datetime.now()
 # Calculate the alarm time (5 minutes from the current time)
 alarm_time = current_time + timedelta(minutes=5)
 print(alarm_time)
+
 # Extract the hour and minute from the alarm time
 hour = str(alarm_time.hour)
 minute = str(alarm_time.minute)
@@ -48,19 +49,19 @@ d(resourceId="com.google.android.deskclock:id/fab").click()
 time.sleep(2)
 
 # Locate the text box for entering the hour value and click on it
-d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_hour_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').click()
+d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_hour_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]')
 text_box1 = d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_hour_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]')
-if text_box.exists:
-    d.click(0.406, 0.923)
+if text_box1.exists:
+    d.click(0.437, 0.911)
     d.send_keys(hour)
     
-
+time.sleep(2)
 d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_minute_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]').click()
 text_box2 = d.xpath('//*[@resource-id="com.google.android.deskclock:id/material_minute_text_input"]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]')
-if text_box.exists:
-    d.click(0.406, 0.923)
+if text_box2.exists:
+    d.click(0.437, 0.911)
     d.send_keys(minute)
-time.sleep(2)
+
 d(text="OK").click()
 time.sleep(2)
 d(resourceId="com.android.systemui:id/center_group").click()
